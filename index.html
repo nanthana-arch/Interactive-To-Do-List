@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive To‑Do List</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📝 Interactive To‑Do List</h1>
+    <div class="header-actions">
+      <button id="themeToggle" class="btn" aria-pressed="false" title="Toggle theme">🌗 Theme</button>
+      <button id="exportBtn" class="btn" title="Export tasks as JSON">⬇️ Export</button>
+      <input id="importFile" type="file" accept="application/json" hidden />
+      <button id="importBtn" class="btn" title="Import tasks from JSON">⬆️ Import</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Add Task</h2>
+      <form id="taskForm" autocomplete="off">
+        <div class="grid">
+          <label>
+            <span>Title <b aria-hidden="true">*</b></span>
+            <input id="title" name="title" type="text" placeholder="e.g., Finish assignment" required />
+          </label>
+          <label>
+            <span>Category</span>
+            <input id="category" name="category" type="text" placeholder="e.g., Work, Personal" />
+          </label>
+          <label>
+            <span>Deadline</span>
+            <input id="due" name="due" type="date" />
+          </label>
+        </div>
+        <label>
+          <span>Description</span>
+          <textarea id="description" name="description" rows="3" placeholder="Optional details…"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Add Task</button>
+          <button class="btn" type="reset">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="toolbar">
+        <div class="filters">
+          <button class="chip active" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" data-filter="active">Active</button>
+          <button class="chip" data-filter="completed">Completed</button>
+        </div>
+        <div class="right-tools">
+          <input id="search" type="search" placeholder="Search title/desc…" />
+          <select id="categoryFilter" aria-label="Filter by category">
+            <option value="">All categories</option>
+          </select>
+          <select id="sort" aria-label="Sort tasks">
+            <option value="created_desc">Newest</option>
+            <option value="created_asc">Oldest</option>
+            <option value="due_asc">Due date ↑</option>
+            <option value="due_desc">Due date ↓</option>
+          </select>
+        </div>
+      </div>
+
+      <ul id="taskList" class="task-list" aria-live="polite"></ul>
+
+      <footer class="list-footer">
+        <span id="count">0 tasks</span>
+        <div class="footer-actions">
+          <button id="clearCompleted" class="btn" title="Remove all completed tasks">🧹 Clear completed</button>
+          <button id="markAllDone" class="btn" title="Mark all as completed">✅ Mark all</button>
+          <button id="unmarkAll" class="btn" title="Mark all as pending">↩️ Unmark all</button>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <template id="taskItemTemplate">
+    <li class="task" data-id="">
+      <label class="checkbox">
+        <input type="checkbox" class="toggle" />
+        <span class="checkmark" aria-hidden="true"></span>
+      </label>
+      <div class="content">
+        <div class="row">
+          <span class="title"></span>
+          <span class="badges"></span>
+        </div>
+        <div class="desc"></div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn edit" title="Edit">✏️</button>
+        <button class="icon-btn delete" title="Delete">🗑️</button>
+      </div>
+    </li>
+  </template>
+
+  <!-- Edit Dialog -->
+  <dialog id="editDialog">
+    <form method="dialog" id="editForm" class="dialog-form">
+      <h3>Edit Task</h3>
+      <input type="hidden" id="editId" />
+      <label>
+        <span>Title *</span>
+        <input id="editTitle" type="text" required />
+      </label>
+      <label>
+        <span>Category</span>
+        <input id="editCategory" type="text" />
+      </label>
+      <label>
+        <span>Deadline</span>
+        <input id="editDue" type="date" />
+      </label>
+      <label>
+        <span>Description</span>
+        <textarea id="editDescription" rows="3"></textarea>
+      </label>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn">Cancel</button>
+        <button id="saveEdit" value="default" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="app-footer">
+    <small>Data is saved locally in your browser (localStorage).</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
